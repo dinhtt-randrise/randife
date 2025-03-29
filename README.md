@@ -8,6 +8,15 @@ Future Predictor (w/ Random Simulating)
 ------------------------------------
 
 ====================================
+              LINKS
+  -------------------------------
+
++ GitHub: https://randife.com/github
+
++ Kaggle: https://randife.com/kaggle
+
+
+====================================
               ABOUT
   -------------------------------
 
