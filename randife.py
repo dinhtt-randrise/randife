@@ -936,6 +936,7 @@ class RandifeRandomSimulator:
             xs_p = self.rnd_format.rnd_num_list_to_str(x_p)
             if not cache_only:
                 lx_sim_cnt.append(str(x_sim_cnt))
+                lx_pred.append(xs_p)
                 if self.rnd_format.match(prd_moment.get_win_rnd_num_list(), x_p, 'match_all'):
                     ma_rsi = ri
             if tck_cnt > 0:
