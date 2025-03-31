@@ -505,13 +505,14 @@ class RandifeRandomSimulator:
 
             pix = rwi + 1
             if pix % dbcnt == 0:
-                try:
-                    self.rnd_format.save_cache()
-                except Exception as e:
-                    msg = str(e)
-                    print(f'== [Error] ==> {msg}')
                 if has_step_log:
                     print(f'== [S1] ==> {pix} / {sz}')
+
+        try:
+            self.rnd_format.save_cache()
+        except Exception as e:
+            msg = str(e)
+            print(f'== [Error] ==> {msg}')
 
         sdf = sdf.sort_values(by=['time_no'], ascending=[True])
 
@@ -519,6 +520,7 @@ class RandifeRandomSimulator:
         dbcnt = int(round(sz / 100.0))
         if dbcnt < 1:
             dbcnt = 1
+        dbix = 0
         pix = 0
 
         mdf = None
@@ -556,13 +558,9 @@ class RandifeRandomSimulator:
                     
                 pix += 1
                 if pix % dbcnt == 0:
-                    try:
-                        self.rnd_format.save_cache()
-                    except Exception as e:
-                        msg = str(e)
-                        print(f'== [Error] ==> {msg}')
+                    dbix += 1
                     if has_step_log:
-                        print(f'== [S2] ==> {pix} / {sz}')
+                        print(f'== [S2] ==> {dbix}, {pix} / {sz}')
 
                 z_sim_cnt = sdf['sim_cnt'].iloc[pib]
 
@@ -627,13 +625,13 @@ class RandifeRandomSimulator:
                 else:
                     pl2 = self.rnd_format.reproduce(x_sim_seed, z_sim_cnt)
 
-        if cache_only:
-            try:
-                self.rnd_format.save_cache()
-            except Exception as e:
-                msg = str(e)
-                print(f'== [Error] ==> {msg}')
-            
+        try:
+            self.rnd_format.save_cache()
+        except Exception as e:
+            msg = str(e)
+            print(f'== [Error] ==> {msg}')
+
+        if cache_only:            
             return None, None, None, None, None
 
         sdf = pd.concat([xdf, sdf])
