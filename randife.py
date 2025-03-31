@@ -427,7 +427,7 @@ class RandifeRandomSimulator:
 
         print(f'PRD_TIME_NO: {prd_time_no}')
         print(f'----------')
-        time_data = self.export_dict_time_data(prd_time_no)
+        time_data = self.rnd_format.export_dict_time_data(prd_time_no)
         for key in time_data.keys():
             val = time_data[key]
             ukey = key.upper()
