@@ -496,7 +496,7 @@ class RandifeRandomSimulator:
             nl = self.rnd_format.import_dataset_num_list(sdf, rwi, 'n')
             wl = self.rnd_format.import_dataset_num_list(sdf, rwi, 'w')
 
-            if self.rnd_format.has_err_rnd_num(nl) or self.has_err_rnd_num(wl):
+            if self.rnd_format.has_err_rnd_num(nl) or self.rnd_format.has_err_rnd_num(wl):
                 continue
 
             sim_seed, sim_cnt = self.rnd_format.capture(wl, nl)
@@ -538,6 +538,8 @@ class RandifeRandomSimulator:
                 y_sim_cnt = sdf['sim_cnt'].iloc[pia]
                 y_nl = self.rnd_format.import_dataset_num_list(sdf, pia, 'n')
                 y_wl = self.rnd_format.import_dataset_num_list(sdf, pia, 'w')
+                if self.rnd_format.has_err_rnd_num(y_nl) or self.rnd_format.has_err_rnd_num(y_wl):
+                    continue
 
             for pib in range(prc_moment_list.size()):
                 if time.time() - start_time > prc_runtime:
@@ -569,6 +571,8 @@ class RandifeRandomSimulator:
                     z_sim_seed = sdf['sim_seed'].iloc[pib]
                     z_nl = self.rnd_format.import_dataset_num_list(sdf, pib, 'n')
                     z_wl = self.rnd_format.import_dataset_num_list(sdf, pib, 'w')
+                    if self.rnd_format.has_err_rnd_num(z_nl) or self.rnd_format.has_err_rnd_num(z_wl):
+                        continue
 
                     rw = {'ix': len(rows), 'time_no_1': y_time_no}
                     self.rnd_format.export_dict_num_list(rw, 'w_1', y_wl)
