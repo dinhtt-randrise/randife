@@ -392,7 +392,7 @@ class RandifeRandomFormat:
         self.dict_time_data[time_no] = data
         
     def export_dict_time_data(self, time_no):
-        if time_no not in self.dict_time_no:
+        if time_no not in self.dict_time_data:
             return None
         return self.dict_time_data[time_no]
 
