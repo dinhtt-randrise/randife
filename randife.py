@@ -586,7 +586,7 @@ class RandifeRandomSimulator:
                     rw['sim_cnt_2'] = z_sim_cnt
                     for mix in range(self.rnd_format.get_size()):
                         no = mix + 1
-                        rw[f'p_{no}'] = self.get_err_rnd_num()
+                        rw[f'p_{no}'] = self.rnd_format.get_err_rnd_num()
                     for match_kind in self.rnd_format.get_pair_matching_keys():
                         rw[f'{match_kind}'] = 0
                     for match_kind in self.rnd_format.get_pair_matching_keys():
