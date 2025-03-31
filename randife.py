@@ -957,8 +957,6 @@ class RandifeRandomSimulator:
 
         x_w = self.rnd_format.rnd_num_list_to_str(prd_moment.get_win_rnd_num_list())
         x_n = self.rnd_format.rnd_num_list_to_str(prd_moment.get_rnd_num_list())
-        x_w = [int(x) for x in x_w]
-        x_n = [int(x) for x in x_n]
         json_pred = {'time_no': int(prd_moment.get_time_no()), 'w': x_w, 'n': x_n, 'sim_seed': int(x_sim_seed), 'prc_time_cnt': int(prc_time_cnt), 'tck_cnt': int(tck_cnt), 'sim_cnt': xs_sim_cnt, 'pred': xs_pred, 'ma_rsi': int(ma_rsi)}
         n_json_pred = self.rnd_format.refine_json_pred(prd_moment, json_pred)
         
