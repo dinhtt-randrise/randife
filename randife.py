@@ -541,7 +541,7 @@ class RandifeRandomSimulator:
                 if self.rnd_format.has_err_rnd_num(y_nl) or self.rnd_format.has_err_rnd_num(y_wl):
                     continue
 
-            for pib in range(prc_moment_list.size()):
+            for pib in range(len(sdf)):
                 if time.time() - start_time > prc_runtime:
                     break
 
