@@ -182,7 +182,7 @@ class RandifeRandomFormat:
         
     def rnd_num(self, mix = 0):
         vmin, vmax = self.get_min_max(mix)
-        return random.randint(vmin, vmax)
+        return self.rnd_gen.randint(vmin, vmax)
 
     def rnd_num_list(self):
         num_list = []
