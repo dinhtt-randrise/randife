@@ -446,10 +446,10 @@ class RandifeRandomSimulator:
 
         data_df = self.rnd_format.trim_dataset_sim_input(data_df)
         
-        cix = self.rnd_format.get_column_index(self, data_df, 'sim_seed')
+        cix = self.rnd_format.get_column_index(data_df, 'sim_seed')
         if cix < 0:
             data_df['sim_seed'] = -1
-        cix = self.rnd_format.get_column_index(self, data_df, 'sim_cnt')
+        cix = self.rnd_format.get_column_index(data_df, 'sim_cnt')
         if cix < 0:
             data_df['sim_cnt'] = -1
 
