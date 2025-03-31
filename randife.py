@@ -584,7 +584,7 @@ class RandifeRandomSimulator:
                     self.rnd_format.export_dict_num_list(rw, 'n_2', z_nl)
                     rw['sim_seed_2'] = z_sim_seed
                     rw['sim_cnt_2'] = z_sim_cnt
-                    for mix in range(len(self.rnd_format.get_size())):
+                    for mix in range(self.rnd_format.get_size()):
                         no = mix + 1
                         rw[f'p_{no}'] = self.get_err_rnd_num()
                     for match_kind in self.rnd_format.get_pair_matching_keys():
