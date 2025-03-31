@@ -103,7 +103,7 @@ class RandifeRandomFormat:
             size = len(rnd_min_list)
         if len(rnd_max_list) < size:
             size = len(rnd_max_list)
-        self.size = moment_size
+        self.size = size
         self.rnd_min_list = rnd_min_list
         self.rnd_max_list = rnd_max_list
         self.def_rnd_min = def_rnd_min
