@@ -632,7 +632,11 @@ class RandifeRandomSimulator:
             msg = str(e)
             print(f'== [Error] ==> {msg}')
 
-        if cache_only:            
+        if cache_only:      
+            pdf = sdf.sort_values(by=['time_no'], ascending=[False])
+            if len(pdf) > prc_time_cnt:
+                pdf = pdf[:prc_time_cnt]
+            
             for rwi in range(len(pdf)):
                 z_sim_cnt = pdf['sim_cnt'].iloc[rwi]
                 pl = self.rnd_format.reproduce(x_sim_seed, z_sim_cnt)
