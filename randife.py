@@ -683,7 +683,7 @@ class RandifeRandomSimulator:
         x_w = ', '.join(w_ls)
         x_n = ', '.join(n_ls)
         json_pred = {'time_no': int(x_time_no), 'w': x_w, 'n': x_n, 'sim_seed': int(x_sim_seed), 'prc_time_cnt': int(prc_time_cnt), 'tck_cnt': int(tck_cnt), 'sim_cnt': xs_sim_cnt, 'pred': xs_pred, 'ma_rsi': int(ma_rsi)}
-        n_json_pred = self.rnd_format.refine_json_pred(prd_moment, json_pred)
+        n_json_pred = self.rnd_format.refine_json_pred(xdf, json_pred)
         
         text = self.rnd_format.heading('simulate', 'prediction_start')
         print(text)
