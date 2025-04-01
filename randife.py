@@ -394,12 +394,15 @@ class RandifeRandomFormat:
 
     def refine_json_pred(self, xdf, json_pred):
         return json_pred
+
+    def capture_map(self, pdf, x_sim_seed):
+        return []
         
 class RandifeRandomSimulator:
     def __init__(self, rnd_format):
         self.rnd_format = rnd_format
 
-    def simulate(self, data_df, prd_time_no, prc_time_cnt, prc_runtime, tck_cnt, has_step_log, cache_only):
+    def simulate(self, data_df, prd_time_no, prc_time_cnt, prc_runtime, tck_cnt, map_cnt, has_step_log, cache_only):
         start_time = time.time()
         
         text = self.rnd_format.heading('simulate', 'method_start')
@@ -614,7 +617,7 @@ class RandifeRandomSimulator:
                         self.rnd_format.export_dataset_num(mdf, pib, f'p_time_no_{match_kind}', data_bag_b[f'pi_time_no_{match_kind}'])
                         self.rnd_format.export_dataset_num(mdf, pib, f'p_sim_seed_{match_kind}', data_bag_b[f'pi_sim_seed_{match_kind}'])
                         self.rnd_format.export_dataset_num(mdf, pib, f'p_win_num_{match_kind}', data_bag_b[f'pi_win_num_{match_kind}'])
-                        self.rnd_format.export_dataset_num(mdf, pib, f'pi_prd_num_{match_kind}', data_bag_b[f'pi_prd_num_{match_kind}'])
+                        self.rnd_format.export_dataset_num(mdf, pib, f'p_prd_num_{match_kind}', data_bag_b[f'pi_prd_num_{match_kind}'])
                 else:
                     pl2 = self.rnd_format.reproduce(x_sim_seed, z_sim_cnt)
                     
@@ -674,6 +677,17 @@ class RandifeRandomSimulator:
         except Exception as e:
             msg = str(e)
             print(f'== [Error] ==> {msg}')
+
+        mapc = 0
+        ma_pred = ''
+        ll_ma_pred = self.rand_format.capture_map(pdf, x_sim_seed)
+        if len(ll_ma_pred) > 0:
+            mapc = 1
+            ls_ma_pred = [', '.join([str(y) for y in x]) for x in ll_ma_pred]
+            if map_cnt > 0:
+                if len(ls_ma_pred) > map_cnt:
+                    ls_ma_pred = ls_ma_pred[:map_cnt]
+            ma_pred = '; '.join(ls_ma_pred)
             
         xs_pred = '; '.join(ls_pred)
         xs_sim_cnt = '; '.join(ls_sim_cnt)
@@ -682,7 +696,7 @@ class RandifeRandomSimulator:
         n_ls = [str(x) for x in x_nl]
         x_w = ', '.join(w_ls)
         x_n = ', '.join(n_ls)
-        json_pred = {'time_no': int(x_time_no), 'w': x_w, 'n': x_n, 'sim_seed': int(x_sim_seed), 'prc_time_cnt': int(prc_time_cnt), 'tck_cnt': int(tck_cnt), 'sim_cnt': xs_sim_cnt, 'pred': xs_pred, 'ma_rsi': int(ma_rsi)}
+        json_pred = {'time_no': int(x_time_no), 'w': x_w, 'n': x_n, 'sim_seed': int(x_sim_seed), 'prc_time_cnt': int(prc_time_cnt), 'tck_cnt': int(tck_cnt), 'sim_cnt': xs_sim_cnt, 'pred': xs_pred, 'ma_rsi': int(ma_rsi), 'mapc': mapc, 'ma_pred': ma_pred}
         n_json_pred = self.rnd_format.refine_json_pred(xdf, json_pred)
         
         text = self.rnd_format.heading('simulate', 'prediction_start')
