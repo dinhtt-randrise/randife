@@ -211,7 +211,7 @@ class RandifeRandomFormat:
     def capture(self, win_rnd_num_list, prd_rnd_num_list):
         lx_win_rnd_num = [str(x) for x in win_rnd_num_list]
         lx_prd_rnd_num = [str(x) for x in prd_rnd_num_list]
-        key = '_'.join(lx_win_rnd_num) + '_' + '_'.join(lx_prd_rnd_num)
+        key = '_'.join(lx_win_rnd_num) + '__' + '_'.join(lx_prd_rnd_num)
         if key in self.cache_capture:
             return self.cache_capture[key][0], self.cache_capture[key][1]
                         
