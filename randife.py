@@ -38,23 +38,6 @@
 #+ PwrallRL:
 #  o Website: https://pwrall.randife.com
 #  o About: Predict Power Ball
-#              _   _   _    _   _ _  
-#  ___ _ _ ___| |_| |_(_)__| |_| | | 
-# / _ \ '_/ _ \  _|  _| / _| / /_  _|
-# \___/_| \___/\__|\__|_\__|_\_\ |_| 
-#------------------------------------
-# Oregon Lottery - Pick 4 Predictor
-#------------------------------------
-#
-#====================================
-#            LINKS
-#  -------------------------------
-#
-# + Kaggle: https://orottick4.com/kaggle
-#
-# + GitHub: https://orottick4.com/github
-#
-# + Lottery: https://orottick4.com/lotte
 #
 #
 #====================================
@@ -91,16 +74,9 @@ class RandifeRandomGenerator:
     def set_seed(self, sim_seed):
         random.seed(sim_seed)
 
-    # https://stackoverflow.com/questions/58124646/why-in-python-is-random-randint-so-much-slower-than-random-random#:~:text=randint%20calls%20randrange%20%2C%20which%20ensures,majority%20of%20randint%20's%20slowness.
-    def randint_faster(self, low, high):   ###still about 1.6 longer than the above, but almost 2.5 times faster than random.randint
-        return floor((high-low+1)*random.random())+low  ##returns a random integer between low and high, inclusive. Results may not be what you expect if int(low) != low, etc. But the numpty who writes 'randint(1.9,3.2)' gets what they deserve.
-    
-    def randint_slower(self, n_min, n_max):
+    def randint(self, n_min, n_max):
         return random.randint(n_min, n_max)
 
-    def randint(self, n_min, n_max):
-        return self.randint_faster(n_min, n_max)
-        
     def rnd_kind(self):
         return 'rnd_sng_thd'
         
@@ -217,7 +193,7 @@ class RandifeRandomFormat:
 
     def capture_seed(self, sim_cnt, rnd_num_list):
         ls_rnd_num = [str(x) for x in rnd_num_list]
-        key = f'{sim_cnt}__' + '_'.join(ls_rnd_num)
+        key = f'{sim_cnt}_' + '_'.join(ls_rnd_num)
         if key in self.cache_capture_seed:
             return self.cache_capture_seed[key]
             
@@ -235,7 +211,7 @@ class RandifeRandomFormat:
     def capture(self, win_rnd_num_list, prd_rnd_num_list):
         lx_win_rnd_num = [str(x) for x in win_rnd_num_list]
         lx_prd_rnd_num = [str(x) for x in prd_rnd_num_list]
-        key = '_'.join(lx_win_rnd_num) + '__' + '_'.join(lx_prd_rnd_num)
+        key = '_'.join(lx_win_rnd_num) + '_' + '_'.join(lx_prd_rnd_num)
         if key in self.cache_capture:
             return self.cache_capture[key][0], self.cache_capture[key][1]
                         
