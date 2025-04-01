@@ -622,7 +622,7 @@ class RandifeRandomSimulator:
         pdf = mdf[mdf['time_no_1'] == x_time_no - 1]
         for mix in range(self.rnd_format.get_size()):
             no = mix + 1
-            pdf[f'fp_{no}'] = self.get_err_rnd_num()
+            pdf[f'fp_{no}'] = self.rnd_format.get_err_rnd_num()
         pdf = pdf.sort_values(by=['time_no_2'], ascending=[False])
 
         ls_pred = []
