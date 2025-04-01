@@ -630,6 +630,16 @@ class RandifeRandomSimulator:
             print(f'== [Error] ==> {msg}')
 
         if cache_only:            
+            for rwi in range(len(pdf)):
+                z_sim_cnt = pdf['sim_cnt'].iloc[rwi]
+                pl = self.rnd_format.reproduce(x_sim_seed, z_sim_cnt)
+
+            try:
+                self.rnd_format.save_cache()
+            except Exception as e:
+                msg = str(e)
+                print(f'== [Error] ==> {msg}')
+            
             return None, None, None, None, None
 
         sdf = pd.concat([xdf, sdf])
@@ -649,7 +659,7 @@ class RandifeRandomSimulator:
             pl = self.rnd_format.reproduce(x_sim_seed, z_sim_cnt)
             self.rnd_format.export_dataset_num_list(pdf, rwi, 'fp', pl)
             spl = [str(x) for x in pl]
-            sp = ', '.join(pl)
+            sp = ', '.join(spl)
             ls_pred.append(sp)
             ls_sim_cnt.append(str(z_sim_cnt))
             if ma_rsi < 0:
