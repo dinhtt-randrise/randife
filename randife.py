@@ -680,7 +680,7 @@ class RandifeRandomSimulator:
 
         mapc = 0
         ma_pred = ''
-        ll_ma_pred = self.rand_format.capture_map(pdf, x_sim_seed)
+        ll_ma_pred = self.rnd_format.capture_map(pdf, x_sim_seed)
         if len(ll_ma_pred) > 0:
             mapc = 1
             ls_ma_pred = [', '.join([str(y) for y in x]) for x in ll_ma_pred]
