@@ -91,9 +91,16 @@ class RandifeRandomGenerator:
     def set_seed(self, sim_seed):
         random.seed(sim_seed)
 
-    def randint(self, n_min, n_max):
+    # https://stackoverflow.com/questions/58124646/why-in-python-is-random-randint-so-much-slower-than-random-random#:~:text=randint%20calls%20randrange%20%2C%20which%20ensures,majority%20of%20randint%20's%20slowness.
+    def randint_faster(self, low, high):   ###still about 1.6 longer than the above, but almost 2.5 times faster than random.randint
+        return floor((high-low+1)*random.random())+low  ##returns a random integer between low and high, inclusive. Results may not be what you expect if int(low) != low, etc. But the numpty who writes 'randint(1.9,3.2)' gets what they deserve.
+    
+    def randint_slower(self, n_min, n_max):
         return random.randint(n_min, n_max)
 
+    def randint(self, n_min, n_max):
+        return self.randint_faster(n_min, n_max)
+        
     def rnd_kind(self):
         return 'rnd_sng_thd'
         
