@@ -497,7 +497,9 @@ class RandifeRandomSimulator:
             msg = str(e)
             print(f'== [Error] ==> {msg}')
 
-        sdf = sdf.sort_values(by=['time_no'], ascending=[True])
+        sdf = sdf.sort_values(by=['time_no'], ascending=[False])
+
+        mdf = sdf.sort_values(by=['time_no'], ascending=[True])
 
         sz = prc_time_cnt * prc_time_cnt
         dbcnt = int(round(sz / 100.0))
@@ -506,26 +508,47 @@ class RandifeRandomSimulator:
         dbix = 0
         pix = 0
 
-        mdf = None
-        rows = []
-        time_no_dict = {}
-        for pia in range(len(sdf)):
+        if not cache_only:
+            data_bag = {}
+            for match_kind in self.rnd_format.get_pair_matching_keys():
+                data_bag[f'{match_kind}_cnt'] = 0
+                mdf[f'{match_kind}'] = 0
+                mdf[f'a_{match_kind}'] = 0
+                mdf[f'{match_kind}_cnt'] = 0
+                mdf[f'p_time_no_{match_kind}'] = ''
+                mdf[f'p_sim_seed_{match_kind}'] = ''
+                mdf[f'p_win_num_{match_kind}'] = ''
+                mdf[f'p_prd_num_{match_kind}'] = ''
+            for mix in range(self.rnd_format.get_size()):
+                no = mix + 1
+                mdf[f'p_{no}'] = self.rnd_format.get_err_rnd_num()
+        for pia in range(len(mdf)):
             if time.time() - start_time > prc_runtime:
                 break
 
             if pia <= prc_time_cnt:
                 continue
 
-            y_sim_seed = sdf['sim_seed'].iloc[pia]
-            
+            y_sim_seed = mdf['sim_seed'].iloc[pia]
+                            
             if not cache_only:
-                y_time_no = sdf['time_no'].iloc[pia]
-                y_sim_cnt = sdf['sim_cnt'].iloc[pia]
-                y_nl = self.rnd_format.import_dataset_num_list(sdf, pia, 'n')
-                y_wl = self.rnd_format.import_dataset_num_list(sdf, pia, 'w')
+                y_time_no = mdf['time_no'].iloc[pia]
+                y_sim_cnt = mdf['sim_cnt'].iloc[pia]
+                y_nl = self.rnd_format.import_dataset_num_list(mdf, pia, 'n')
+                y_wl = self.rnd_format.import_dataset_num_list(mdf, pia, 'w')
                 if self.rnd_format.has_err_rnd_num(y_nl) or self.rnd_format.has_err_rnd_num(y_wl):
                     continue
 
+                data_bag_a = {}
+                for match_kind in self.rnd_format.get_pair_matching_keys():
+                    data_bag_a[f'{match_kind}'] = 0
+                    data_bag_a[f'a_{match_kind}'] = 0
+                    data_bag_a[f'{match_kind}_cnt'] = 0
+                    data_bag_a[f'p_time_no_{match_kind}'] = ''
+                    data_bag_a[f'p_sim_seed_{match_kind}'] = ''
+                    data_bag_a[f'p_win_num_{match_kind}'] = ''
+                    data_bag_a[f'p_prd_num_{match_kind}'] = ''
+            
             for pib in range(len(sdf)):
                 if time.time() - start_time > prc_runtime:
                     break
@@ -555,58 +578,52 @@ class RandifeRandomSimulator:
                     if self.rnd_format.has_err_rnd_num(z_nl) or self.rnd_format.has_err_rnd_num(z_wl):
                         continue
 
-                    rw = {'ix': len(rows), 'time_no_1': y_time_no}
-                    self.rnd_format.export_dict_num_list(rw, 'w_1', y_wl)
-                    self.rnd_format.export_dict_num_list(rw, 'n_1', y_nl)
-                    rw['sim_seed_1'] = y_sim_seed
-                    rw['sim_cnt_1'] = y_sim_cnt
-                    rw['time_no_2'] = z_time_no
-                    self.rnd_format.export_dict_num_list(rw, 'w_2', z_wl)
-                    self.rnd_format.export_dict_num_list(rw, 'n_2', z_nl)
-                    rw['sim_seed_2'] = z_sim_seed
-                    rw['sim_cnt_2'] = z_sim_cnt
-                    for mix in range(self.rnd_format.get_size()):
-                        no = mix + 1
-                        rw[f'p_{no}'] = self.rnd_format.get_err_rnd_num()
+                    data_bag_b = {}
                     for match_kind in self.rnd_format.get_pair_matching_keys():
-                        rw[f'{match_kind}'] = 0
-                    for match_kind in self.rnd_format.get_pair_matching_keys():
-                        rw[f'{match_kind}_cnt'] = 0
-                    rows.append(rw)
-                    df = pd.DataFrame([rw])
-                    if mdf is None:
-                        mdf = df
-                    else:
-                        mdf = pd.concat([mdf, df])
-                    mdf = mdf.sort_values(by=['ix'], ascending=[True])
-                 
-                    time_key = str(y_time_no) + '_' + str(z_time_no)
-                    time_no_dict[time_key] = len(rows) - 1
+                        data_bag_b[f'i_{match_kind}'] = mdf[f'{match_kind}'].iloc[pib]
+                        data_bag_b[f'pi_time_no_{match_kind}'] = str(mdf[f'p_time_no_{match_kind}'].iloc[pib])
+                        data_bag_b[f'pi_sim_seed_{match_kind}'] = str(mdf[f'p_sim_seed_{match_kind}'].iloc[pib])
+                        data_bag_b[f'pi_win_num_{match_kind}'] = str(mdf[f'p_win_num_{match_kind}'].iloc[pib])
+                        data_bag_b[f'pi_prd_num_{match_kind}'] = str(mdf[f'p_prd_num_{match_kind}'].iloc[pib])
 
-                    ix = len(rows) - 1
-                    
                 pl = self.rnd_format.reproduce(y_sim_seed, z_sim_cnt)
 
                 if not cache_only:
-                    self.rnd_format.export_dataset_num_list(mdf, ix, 'p', pl)
-
-                    time_key = str(y_time_no - 1) + '_' + str(z_time_no)
-                    pi = -1
-                    if time_key in time_no_dict:
-                        pi = time_no_dict[time_key]
+                    self.rnd_format.export_dataset_num_list(mdf, pia, 'p', pl)
 
                     for match_kind in self.rnd_format.get_pair_matching_keys():
                         v = 0
                         if self.rnd_format.match(y_wl, pl, match_kind):
                             v = 1
-                        self.rnd_format.export_dataset_num(mdf, ix, f'{match_kind}', v)
-                        if pi < 0:
-                            continue
-                        cnt = mdf[f'{match_kind}_cnt'].iloc[pi]
-                        cnt = cnt + v
-                        self.rnd_format.export_dataset_num(mdf, pi, f'{match_kind}_cnt', cnt)
+
+                        data_bag_b[f'i_{match_kind}'] += v
+                        data_bag_a[f'a_{match_kind}'] += v
+
+                        if data_bag_b[f'pi_time_no_{match_kind}'] != '':
+                            data_bag_b[f'pi_time_no_{match_kind}'] += '; '
+                            data_bag_b[f'pi_sim_seed_{match_kind}'] += '; '
+                            data_bag_b[f'pi_win_num_{match_kind}'] += '; '
+                            data_bag_b[f'pi_prd_num_{match_kind}'] += '; '
+
+                        data_bag_b[f'pi_time_no_{match_kind}'] += str(y_time_no)
+                        data_bag_b[f'pi_sim_seed_{match_kind}'] += str(y_sim_seed)
+                        data_bag_b[f'pi_win_num_{match_kind}'] += ', '.join([str(x) for x in y_wl])
+                        data_bag_b[f'pi_prd_num_{match_kind}'] += ', '.join([str(x) for x in pl])
+                        
+                        self.rnd_format.export_dataset_num(mdf, pib, f'{match_kind}', data_bag_b[f'i_{match_kind}'])
+                        self.rnd_format.export_dataset_num(mdf, pib, f'p_time_no_{match_kind}', data_bag_b[f'pi_time_no_{match_kind}'])
+                        self.rnd_format.export_dataset_num(mdf, pib, f'p_sim_seed_{match_kind}', data_bag_b[f'pi_sim_seed_{match_kind}'])
+                        self.rnd_format.export_dataset_num(mdf, pib, f'p_win_num_{match_kind}', data_bag_b[f'pi_win_num_{match_kind}'])
+                        self.rnd_format.export_dataset_num(mdf, pib, f'pi_prd_num_{match_kind}', data_bag_b[f'pi_prd_num_{match_kind}'])
+
+                    
                 else:
                     pl2 = self.rnd_format.reproduce(x_sim_seed, z_sim_cnt)
+                    
+            if not cache_only:
+                for match_kind in self.rnd_format.get_pair_matching_keys():
+                    data_bag[f'{match_kind}_cnt'] += data_bag_a[f'a_{match_kind}']
+                    self.rnd_format.export_dataset_num(mdf, pia, f'{match_kind}_cnt', data_bag[f'{match_kind}_cnt'])
 
         try:
             self.rnd_format.save_cache()
@@ -619,17 +636,18 @@ class RandifeRandomSimulator:
 
         sdf = pd.concat([xdf, sdf])
         sdf = sdf.sort_values(by=['time_no'], ascending=[False])
-        pdf = mdf[mdf['time_no_1'] == x_time_no - 1]
+        pdf = mdf.sort_values(by=['time_no'], ascending=[False])
+        if len(pdf) > prc_time_cnt:
+            pdf = pdf[:prc_time_cnt]
         for mix in range(self.rnd_format.get_size()):
             no = mix + 1
             pdf[f'fp_{no}'] = self.rnd_format.get_err_rnd_num()
-        pdf = pdf.sort_values(by=['time_no_2'], ascending=[False])
 
         ls_pred = []
         ls_sim_cnt = []
         ma_rsi = -1
         for rwi in range(len(pdf)):
-            z_sim_cnt = pdf['sim_cnt_2'].iloc[rwi]
+            z_sim_cnt = pdf['sim_cnt'].iloc[rwi]
             pl = self.rnd_format.reproduce(x_sim_seed, z_sim_cnt)
             self.rnd_format.export_dataset_num_list(pdf, rwi, 'fp', pl)
             spl = [str(x) for x in pl]
