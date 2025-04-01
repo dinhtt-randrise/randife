@@ -234,7 +234,7 @@ class RandifeRandomFormat:
                         
         sim_seed = self.capture_seed(1, prd_rnd_num_list)
 
-        random.seed(sim_seed)
+        self.set_seed(sim_seed)
         
         sim_cnt = 0
         p = self.rnd_num_list()
