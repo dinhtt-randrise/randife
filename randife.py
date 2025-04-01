@@ -549,7 +549,7 @@ class RandifeRandomSimulator:
                     data_bag_a[f'p_win_num_{match_kind}'] = ''
                     data_bag_a[f'p_prd_num_{match_kind}'] = ''
             
-            for pib in range(len(sdf)):
+            for pib in range(len(mdf)):
                 if time.time() - start_time > prc_runtime:
                     break
 
@@ -571,10 +571,10 @@ class RandifeRandomSimulator:
                 z_sim_cnt = sdf['sim_cnt'].iloc[pib]
 
                 if not cache_only:
-                    z_time_no = sdf['time_no'].iloc[pib]
-                    z_sim_seed = sdf['sim_seed'].iloc[pib]
-                    z_nl = self.rnd_format.import_dataset_num_list(sdf, pib, 'n')
-                    z_wl = self.rnd_format.import_dataset_num_list(sdf, pib, 'w')
+                    z_time_no = mdf['time_no'].iloc[pib]
+                    z_sim_seed = mdf['sim_seed'].iloc[pib]
+                    z_nl = self.rnd_format.import_dataset_num_list(mdf, pib, 'n')
+                    z_wl = self.rnd_format.import_dataset_num_list(mdf, pib, 'w')
                     if self.rnd_format.has_err_rnd_num(z_nl) or self.rnd_format.has_err_rnd_num(z_wl):
                         continue
 
@@ -615,8 +615,6 @@ class RandifeRandomSimulator:
                         self.rnd_format.export_dataset_num(mdf, pib, f'p_sim_seed_{match_kind}', data_bag_b[f'pi_sim_seed_{match_kind}'])
                         self.rnd_format.export_dataset_num(mdf, pib, f'p_win_num_{match_kind}', data_bag_b[f'pi_win_num_{match_kind}'])
                         self.rnd_format.export_dataset_num(mdf, pib, f'pi_prd_num_{match_kind}', data_bag_b[f'pi_prd_num_{match_kind}'])
-
-                    
                 else:
                     pl2 = self.rnd_format.reproduce(x_sim_seed, z_sim_cnt)
                     
