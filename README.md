@@ -39,4 +39,11 @@ events, such as:
   o Website: https://pwrall.randife.com
   o About: Predict Power Ball
 
+
+====================================
+             REFERENCES
+  -------------------------------
+
+1. LightGBM Learning to rank anime recommender [ https://www.kaggle.com/code/ekity1002/lightgbm-learning-to-rank-anime-recommender ]
+
 ```
