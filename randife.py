@@ -472,7 +472,7 @@ class RandifeRandomSimulator:
                 if not self.rnd_format.is_observe_good(odf, o_cnt, ma_field):
                     continue
                 observe_fn = fn_observe_file(fn_obs)
-                copy_file(fn_obs, f'{save_dir}/{observe_fn}')
+                self.rnd_format.copy_file(fn_obs, f'{save_dir}/{observe_fn}')
                 print(f'== [Copy] ==> {observe_fn}')
                 for ri in range(len(odf)):
                     if odf[ma_field].iloc[ri] > 0:
@@ -481,9 +481,9 @@ class RandifeRandomSimulator:
                         pdf = pd.read_csv(f'{data_dir}/{pick_fn}')
                         if not self.is_pick_good(pdf, p_cnt):
                             continue
-                        copy_file(f'{data_dir}/{pick_fn}', f'{save_dir}/{pick_fn}')
+                        self.rnd_format.copy_file(f'{data_dir}/{pick_fn}', f'{save_dir}/{pick_fn}')
                         print(f'== [Copy] ==> {pick_fn}')
-                        copy_file(f'{data_dir}/{pred_fn}', f'{save_dir}/{pred_fn}')
+                        self.rnd_format.copy_file(f'{data_dir}/{pred_fn}', f'{save_dir}/{pred_fn}')
                         print(f'== [Copy] ==> {pred_fn}')
         
         text = self.rnd_format.heading('map_collect', 'method_end')
