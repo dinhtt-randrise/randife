@@ -66,6 +66,7 @@ from datetime import timedelta
 import pandas as pd
 import numpy as np
 import pickle
+import glob
 
 class RandifeRandomGenerator:
     def __init__(self, rnd_format):
@@ -280,6 +281,34 @@ class RandifeRandomFormat:
                 '''
                 return text
 
+        if method == 'map_collect':
+            if kind == 'method_start':
+                text = '''
+====================================
+           MAP COLLECT
+  -------------------------------
+                '''
+                return text
+            if kind == 'method_end':
+                text = '''
+  -------------------------------
+           MAP COLLECT
+====================================
+                '''
+                return text
+            if kind == 'parameters_start':
+                text = '''
+  -------------------------------
+            PARAMETERS
+  -------------------------------
+                '''
+                return text
+            if kind == 'parameters_end':
+                text = '''
+  -------------------------------
+                '''
+                return text
+
         return ''
 
     #----- Properties functions -----#
@@ -397,10 +426,68 @@ class RandifeRandomFormat:
 
     def capture_map(self, pdf, x_sim_seed):
         return []
+
+    def is_observe_good(self, odf, o_cnt, o_ma_field = 'ma'):
+        if len(odf) == o_cnt:
+            df = odf[odf[o_ma_field] > 0]
+            if len(df) > 0:
+                return True
+            return False
+        else:
+            return False   
+
+    def is_pick_good(self, odf, p_cnt):
+        if len(odf) == p_cnt:
+            return True
+        else:
+            return False
+
+    def copy_file(self, src_fn, tag_fn):
+        os.system(f'cp -f "{src_fn}" "{tag_fn}"')
         
 class RandifeRandomSimulator:
     def __init__(self, rnd_format):
         self.rnd_format = rnd_format
+
+    def map_collect(self, o_cnt, p_cnt, ma_field, data_dirs, save_dir, fn_observe_glob, fn_observe_file, fn_pick_file, fn_pred_file):
+        text = self.rnd_format.heading('map_collect', 'method_start')
+        print(text)
+
+        text = self.rnd_format.heading('map_collect', 'parameters_start')
+        print(text)
+
+        print(f'O_CNT: {o_cnt}')
+        print(f'P_CNT: {p_cnt}')
+        print(f'DATA_DIRS: {data_dirs}')
+        print(f'SAVE_DIR: {save_dir}')
+
+        text = self.rnd_format.heading('map_collect', 'parameters_end')
+        print(text)
+    
+        for data_dir in data_dirs:
+            obs_glob = fn_observe_glob()
+            lg_obs = glob.glob(f'{data_dir}/{obs_glob}')
+            for fn_obs in lg_obs:
+                odf = pd.read_csv(fn_obs)
+                if not self.rnd_format.is_observe_good(odf, o_cnt, ma_field):
+                    continue
+                observe_fn = fn_observe_file(fn_obs)
+                copy_file(fn_obs, f'{save_dir}/{observe_fn}')
+                print(f'== [Copy] ==> {observe_fn}')
+                for ri in range(len(odf)):
+                    if odf[ma_field].iloc[ri] > 0:
+                        pick_fn = fn_pick_file(odf, ri)
+                        pred_fn = fn_pred_file(odf, ri)
+                        pdf = pd.read_csv(f'{data_dir}/{pick_fn}')
+                        if not self.is_pick_good(pdf, p_cnt):
+                            continue
+                        copy_file(f'{data_dir}/{pick_fn}', f'{save_dir}/{pick_fn}')
+                        print(f'== [Copy] ==> {pick_fn}')
+                        copy_file(f'{data_dir}/{pred_fn}', f'{save_dir}/{pred_fn}')
+                        print(f'== [Copy] ==> {pred_fn}')
+        
+        text = self.rnd_format.heading('map_collect', 'method_end')
+        print(text)
 
     def simulate(self, data_df, prd_time_no, prc_time_cnt, prc_runtime, tck_cnt, map_cnt, has_step_log, cache_only):
         start_time = time.time()
