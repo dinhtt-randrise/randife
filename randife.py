@@ -479,7 +479,7 @@ class RandifeRandomSimulator:
                         pick_fn = fn_pick_file(odf, ri)
                         pred_fn = fn_pred_file(odf, ri)
                         pdf = pd.read_csv(f'{data_dir}/{pick_fn}')
-                        if not self.is_pick_good(pdf, p_cnt):
+                        if not self.rnd_format.is_pick_good(pdf, p_cnt):
                             continue
                         self.rnd_format.copy_file(f'{data_dir}/{pick_fn}', f'{save_dir}/{pick_fn}')
                         print(f'== [Copy] ==> {pick_fn}')
